@@ -47,15 +47,16 @@
 		
 		//3桁未満の数値を配列に格納
 		var numArray = [];
+		var max_digit = 100;
 		for (var i = 1;;i++) {
 			var fizzNum_multiple = fizzNum*i;
 			var buzzNum_multiple = buzzNum*i;
 			
-			if (fizzNum_multiple >= 100 && buzzNum_multiple >= 100){
+			if (fizzNum_multiple >= max_digit && buzzNum_multiple >= max_digit){
 	    		break;
-			}else if (fizzNum_multiple < 100 && buzzNum_multiple < 100){
+			}else if (fizzNum_multiple < max_digit && buzzNum_multiple < max_digit){
 	    		numArray.push(fizzNum_multiple,buzzNum_multiple);
-			}else if (fizzNum_multiple < 100){
+			}else if (fizzNum_multiple < max_digit){
 				numArray.push(fizzNum_multiple);
 				break;
 			}else{
