@@ -6,7 +6,7 @@
     <title>FizzBuzz問題</title>
 </head>
 
-<body onload="DefaultSave()">
+<body>
     <h1>FizzBuzz問題</h1>
     <form>
         <p>FizzNum：<input type="text" id="FizzNum"></p>
@@ -17,11 +17,7 @@
     <div id="output"></div>
 </body>
 <script>
-let defaultHTML;
-
-function DefaultSave() {
-    defaultHTML = document.getElementById('output').innerHTML;
-}
+const defaultHTML = document.getElementById('output').innerHTML;
 
 function compareFunc(a, b) {
     return a - b;
