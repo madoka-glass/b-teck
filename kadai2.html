@@ -1,93 +1,96 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-	<meta charset="UTF-8">
-	<title>FizzBuzz問題</title>
-</head>
-<body onload="DefaultSave()">
-	<h1>FizzBuzz問題</h1>
-	<form>
-		<p>FizzNum：<input type="text" id="FizzNum"></p>
-		<p>BuzzNum：<input type="text" id="BuzzNum"></p>
-		<p><input type="button" value="実行" onClick="return printFizzBuzz()"></p>
-	</form>
-	<p>【出力】</p>
-	<div id="output"></div>
-</body>
 
+<head>
+    <meta charset="UTF-8">
+    <title>FizzBuzz問題</title>
+</head>
+
+<body onload="DefaultSave()">
+    <h1>FizzBuzz問題</h1>
+    <form>
+        <p>FizzNum：<input type="text" id="FizzNum"></p>
+        <p>BuzzNum：<input type="text" id="BuzzNum"></p>
+        <p><input type="button" value="実行" onClick="return printFizzBuzz()"></p>
+    </form>
+    <p>【出力】</p>
+    <div id="output"></div>
+</body>
 <script>
-	var defaultHTML;
-	function DefaultSave() {
-	  defaultHTML = document.getElementById('output').innerHTML;
-	}
-	
-	function compareFunc(a, b) {
-		return a - b;
-	}
-	
-	function printFizzBuzz(){
-		//入力値を取得
-		var fizzNum = parseInt(document.getElementById('FizzNum').value);
-		var buzzNum = parseInt(document.getElementById('BuzzNum').value);
-		
-		//入力値をチェック
-		var fizz_invalid = !fizzNum || !Number.isInteger(fizzNum);
-		var buzz_invalid = !buzzNum || !Number.isInteger(buzzNum);
-		
-		if(fizz_invalid || buzz_invalid){
-			document.getElementById('output').innerHTML = defaultHTML;
-			
-			var elem = document.createElement('p');
-			document.getElementById('output').appendChild(elem);
-			var text = document.createTextNode('整数を入力してください');
-			elem.appendChild(text);
-			
-			return false;
-		}
-		
-		//3桁未満の数値を配列に格納
-		var numArray = [];
-		var max_digit = 100;
-		for (var i = 1;;i++) {
-			var fizzNum_multiple = fizzNum*i;
-			var buzzNum_multiple = buzzNum*i;
-			
-			if (fizzNum_multiple >= max_digit && buzzNum_multiple >= max_digit){
-	    		break;
-			}else if (fizzNum_multiple < max_digit && buzzNum_multiple < max_digit){
-	    		numArray.push(fizzNum_multiple,buzzNum_multiple);
-			}else if (fizzNum_multiple < max_digit){
-				numArray.push(fizzNum_multiple);
-				break;
-			}else{
-				numArray.push(buzzNum_multiple);
-				break;
-			}
-		}
-		
-		//昇順にソートし、重複を削除
-		numArray.sort(compareFunc);
-		var sortedNumArray = Array.from(new Set(numArray));
-		
-		//画面の出力結果をリセット
-		document.getElementById('output').innerHTML = defaultHTML;
-		
-		//倍数に応じてFizzBuzzを出力
-		for (var num of sortedNumArray) {
-			var elem = document.createElement('p');
-			document.getElementById('output').appendChild(elem);
-			
-			if (num % fizzNum == 0 && num % buzzNum == 0){
-				var fizzBuzzText = document.createTextNode('FizzBuzz ' + num);
-				elem.appendChild(fizzBuzzText);
-			}else if (num % fizzNum ==0){
-	    		var fizzText = document.createTextNode('Fizz ' + num);
-				elem.appendChild(fizzText);
-			}else {
-	    		var buzzText = document.createTextNode('Buzz ' + num);
-				elem.appendChild(buzzText);
-			}
-		}
-	}
+let defaultHTML;
+
+function DefaultSave() {
+    defaultHTML = document.getElementById('output').innerHTML;
+}
+
+function compareFunc(a, b) {
+    return a - b;
+}
+
+function printFizzBuzz() {
+    //入力値を取得
+    const FIZZ_NUM = parseFloat(document.getElementById('FizzNum').value);
+    const BUZZ_NUM = parseFloat(document.getElementById('BuzzNum').value);
+
+    //入力値をチェック
+    const FIZZ_INVALID = !FIZZ_NUM || !Number.isInteger(FIZZ_NUM);
+    const BUZZ_INVALID = !BUZZ_NUM || !Number.isInteger(BUZZ_NUM);
+
+    if (FIZZ_INVALID || BUZZ_INVALID) {
+        document.getElementById('output').innerHTML = defaultHTML;
+
+        const elem = document.createElement('p');
+        document.getElementById('output').appendChild(elem);
+        const text = document.createTextNode('整数を入力してください');
+        elem.appendChild(text);
+
+        return false;
+    }
+
+    //3桁未満の数値を配列に格納
+    let numArray = [];
+    const MAX_DIGIT = 100;
+    for (let i = 1;; i++) {
+        const fizzNum_multiple = FIZZ_NUM * i;
+        const buzzNum_multiple = BUZZ_NUM * i;
+
+        if (fizzNum_multiple >= MAX_DIGIT && buzzNum_multiple >= MAX_DIGIT) {
+            break;
+        } else if (fizzNum_multiple < MAX_DIGIT && buzzNum_multiple < MAX_DIGIT) {
+            numArray.push(fizzNum_multiple, buzzNum_multiple);
+        } else if (fizzNum_multiple < MAX_DIGIT) {
+            numArray.push(fizzNum_multiple);
+            break;
+        } else {
+            numArray.push(buzzNum_multiple);
+            break;
+        }
+    }
+
+    //昇順にソートし、重複を削除
+    numArray.sort(compareFunc);
+    const sortedNumArray = Array.from(new Set(numArray));
+
+    //画面の出力結果をリセット
+    document.getElementById('output').innerHTML = defaultHTML;
+
+    //倍数に応じてFizzBuzzを出力
+    for (const num of sortedNumArray) {
+        const elem = document.createElement('p');
+        document.getElementById('output').appendChild(elem);
+
+        if (num % FIZZ_NUM == 0 && num % BUZZ_NUM == 0) {
+            const fizzBuzzText = document.createTextNode('FizzBuzz ' + num);
+            elem.appendChild(fizzBuzzText);
+        } else if (num % FIZZ_NUM == 0) {
+            const fizzText = document.createTextNode('Fizz ' + num);
+            elem.appendChild(fizzText);
+        } else {
+            const buzzText = document.createTextNode('Buzz ' + num);
+            elem.appendChild(buzzText);
+        }
+    }
+}
 </script>
+
 </html>
