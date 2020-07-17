@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ToDoリスト</title>
+</head>
+<style type="text/css">
+.button {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.title {
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: large;
+}
+</style>
+
+<body>
+    <h1>ToDoリスト</h1>
+    <input type="radio" name="status" 　value="all" checked>すべて
+    <input type="radio" name="status" 　value="working">作業中
+    <input type="radio" name="status" 　value="done">完了
+    <table id="tasklist">
+        <tr>
+            <th>ID</th>
+            <th>コメント</th>
+            <th>状態</th>
+        </tr>
+    </table>
+    <h2>新規タスクの追加</h2>
+    <p><input type="text" id="taskname"><input type="button" id="addButton" class="button" value="追加"></input></p>
+</body>
+<script>
+document.getElementById('addButton').addEventListener('click', () => {
+    //入力値を取得
+    const taskName = document.getElementById('taskname').value;
+
+    //タスク行の追加
+    const fragment = document.createDocumentFragment();
+    const tr = document.createElement('tr');
+    fragment.appendChild(tr);
+
+    //IDカラムの設定
+    const tdId = document.createElement('td');
+    const rowNum = tasklist.rows.length;
+    tdId.textContent = rowNum;
+    tr.appendChild(tdId);
+
+    //コメントカラムの設定
+    const tdComment = document.createElement('td');
+    tdComment.textContent = taskName;
+    tr.appendChild(tdComment);
+
+    //状態カラムの設定
+    const tdStatus = document.createElement('td');
+    const buttonStatus = document.createElement('input');
+    buttonStatus.setAttribute('type', 'button');
+    buttonStatus.setAttribute('value', '作業中');
+    buttonStatus.setAttribute('class', 'button');
+    tdStatus.appendChild(buttonStatus);
+    tr.appendChild(tdStatus);
+
+    //削除ボタンの設定
+    const buttonDelete = document.createElement('input');
+    buttonDelete.setAttribute('type', 'button');
+    buttonDelete.setAttribute('value', '削除');
+    buttonDelete.setAttribute('class', 'button');
+    tr.appendChild(buttonDelete);
+
+    document.getElementById('tasklist').appendChild(fragment);
+});
+</script>
+
+</html>
