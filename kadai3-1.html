@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ToDoリスト</title>
+</head>
+<style type="text/css">
+.button {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.title {
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: large;
+}
+</style>
+
+<body>
+    <h1>ToDoリスト</h1>
+    <input type="radio" name="status" 　value="all" checked>すべて
+    <input type="radio" name="status" 　value="working">作業中
+    <input type="radio" name="status" 　value="done">完了
+    <table id="tasklist">
+        <tr>
+            <th>ID</th>
+            <th>コメント</th>
+            <th>状態</th>
+        </tr>
+    </table>
+    <h2>新規タスクの追加</h2>
+    <p><input type="text" id="taskname"><input type="button" id="addButton" class="button" value="追加"></input></p>
+</body>
+<script>
+const INITIAL_ROW_NUM = 1;
+const DELETE_BUTTON = '削除';
+const STATUS_WORKING = '作業中';
+const table = document.getElementById('tasklist');
+
+document.getElementById('addButton').addEventListener('click', () => {
+    //入力値を取得
+    const todo = {
+        task: document.getElementById('taskname').value,
+        status: STATUS_WORKING
+    }
+
+    //ToDoリストの作成
+    const todos = createTodos(todo);
+
+    //テーブルのリセット
+    while (table.rows.length > INITIAL_ROW_NUM) table.deleteRow(1);
+
+    //ToDoリストの表示
+    displayTodos(todos);
+});
+
+function createTodos(newTodo) {
+    let todos = [];
+
+    if (table.rows.length === INITIAL_ROW_NUM) {
+        todos.push(newTodo)
+    } else {
+        for (let i = 1; i < table.rows.length; i++) {
+            const todo = {
+                task: table.rows[i].cells[1].innerHTML,
+                status: table.rows[i].cells[2].childNodes[0].value
+            }
+            todos.push(todo);
+        }
+        todos.push(newTodo)
+    }
+
+    return todos;
+}
+
+function displayTodos(todoList) {
+    for (todo of todoList) {
+        //タスク行の追加
+        const fragment = document.createDocumentFragment();
+        const tr = document.createElement('tr');
+        fragment.appendChild(tr);
+
+        //IDカラムの設定
+        const tdId = document.createElement('td');
+        const rowNum = tasklist.rows.length;
+        tdId.textContent = rowNum;
+        tr.appendChild(tdId);
+
+        //コメントカラムの設定
+        const tdComment = document.createElement('td');
+        tdComment.textContent = todo.task;
+        tr.appendChild(tdComment);
+
+        //状態カラムの設定
+        const tdStatus = document.createElement('td');
+        const buttonStatus = document.createElement('input');
+        buttonStatus.setAttribute('type', 'button');
+        buttonStatus.setAttribute('value', todo.status);
+        buttonStatus.setAttribute('class', 'button');
+        tdStatus.appendChild(buttonStatus);
+        tr.appendChild(tdStatus);
+
+        //削除ボタンの設定
+        const buttonDelete = document.createElement('input');
+        buttonDelete.setAttribute('type', 'button');
+        buttonDelete.setAttribute('value', DELETE_BUTTON);
+        buttonDelete.setAttribute('class', 'button');
+        tr.appendChild(buttonDelete);
+
+        document.getElementById('tasklist').appendChild(fragment);
+    }
+}
+</script>
+
+</html>
