@@ -52,7 +52,7 @@ document.getElementById('addButton').addEventListener('click', () => {
     const todos = createTodos(todo);
 
     //テーブルのリセット
-    while (table.rows.length > 1) table.deleteRow(1);
+    while (table.rows.length > INITIAL_ROW_NUM) table.deleteRow(1);
 
     //ToDoリストの表示
     displayTodos(todos);
