@@ -36,60 +36,39 @@
     <p><input type="text" id="taskname"><input type="button" id="addButton" class="button" value="追加"></input></p>
 </body>
 <script>
-const INITIAL_ROW_NUM = 1;
 const DELETE_BUTTON = '削除';
 const STATUS_WORKING = '作業中';
 const table = document.getElementById('tasklist');
+let todos = [];
 
 document.getElementById('addButton').addEventListener('click', () => {
     //入力値を取得
-    const todo = {
+    const newTodo = {
+        id: todos.length + 1,
         task: document.getElementById('taskname').value,
         status: STATUS_WORKING
     }
 
     //ToDoリストの作成
-    const todos = createTodos(todo);
-
-    //テーブルのリセット
-    while (table.rows.length > INITIAL_ROW_NUM) table.deleteRow(1);
+    todos.push(newTodo);
 
     //ToDoリストの表示
     displayTodos(todos);
 });
 
-function createTodos(newTodo) {
-    let todos = [];
-    const TODO_COLUMN = 1;
-    const STATUS_COLUMN = 2;
-
-    if (table.rows.length === INITIAL_ROW_NUM) {
-        todos.push(newTodo)
-    } else {
-        for (let i = 1; i < table.rows.length; i++) {
-            const todo = {
-                task: table.rows[i].cells[TODO_COLUMN].innerHTML,
-                status: table.rows[i].cells[STATUS_COLUMN].childNodes[0].value
-            }
-            todos.push(todo);
-        }
-        todos.push(newTodo)
-    }
-
-    return todos;
-}
-
 function displayTodos(todoList) {
-    for (todo of todoList) {
-        //タスク行の追加
+    //テーブルのリセット
+    while (table.rows.length > 1) table.deleteRow(1);
+
+    todoList.forEach( todo => {
+        //新規todoの行を設定
         const fragment = document.createDocumentFragment();
         const tr = document.createElement('tr');
         fragment.appendChild(tr);
 
         //IDカラムの設定
         const tdId = document.createElement('td');
-        const rowNum = tasklist.rows.length;
-        tdId.textContent = rowNum;
+        tdId.textContent = todo.id;
         tr.appendChild(tdId);
 
         //コメントカラムの設定
@@ -111,25 +90,23 @@ function displayTodos(todoList) {
         buttonDelete.setAttribute('type', 'button');
         buttonDelete.setAttribute('value', DELETE_BUTTON);
         buttonDelete.setAttribute('class', 'button');
-        buttonDelete.setAttribute('onclick', 'deleteRow(this)');
+        buttonDelete.addEventListener('click', event => {
+            //対象行を削除
+            const idNum = parseInt(event.target.parentNode.firstChild.outerText);
+            todos = todos.filter(todo => todo.id !== idNum);
+
+            //IDの振り直し
+            todos.forEach((todo,index) => {
+                todo.id = index + 1;
+            });
+            
+            //ToDoリストの表示
+            displayTodos(todos);
+        })
         tr.appendChild(buttonDelete);
 
         document.getElementById('tasklist').appendChild(fragment);
-    }
-}
-
-function deleteRow(elem) {
-    const ID_COLUMN = 0;
-
-    //対象行を削除
-    const idNum = elem.parentNode.rowIndex;
-    const table = document.getElementById('tasklist');
-    table.deleteRow(idNum);
-
-    //IDの振り直し
-    for (let i = 1; i < table.rows.length; i++) {
-        table.rows[i].cells[ID_COLUMN].innerText = i;
-    }
+    });
 }
 </script>
 
