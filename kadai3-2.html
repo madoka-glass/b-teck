@@ -77,36 +77,46 @@ function displayTodos(todoList) {
         tr.appendChild(tdComment);
 
         //状態カラムの設定
-        const tdStatus = document.createElement('td');
-        const buttonStatus = document.createElement('input');
-        buttonStatus.setAttribute('type', 'button');
-        buttonStatus.setAttribute('value', todo.status);
-        buttonStatus.setAttribute('class', 'button');
-        tdStatus.appendChild(buttonStatus);
-        tr.appendChild(tdStatus);
+        tr.appendChild(createStatBtn(todo));
 
         //削除ボタンの設定
-        const buttonDelete = document.createElement('input');
-        buttonDelete.setAttribute('type', 'button');
-        buttonDelete.setAttribute('value', DELETE_BUTTON);
-        buttonDelete.setAttribute('class', 'button');
-        buttonDelete.addEventListener('click', event => {
-            //対象行を削除
-            const idNum = parseInt(event.target.parentNode.firstChild.outerText);
-            todos = todos.filter(todo => todo.id !== idNum);
-
-            //IDの振り直し
-            todos.forEach((todo,index) => {
-                todo.id = index + 1;
-            });
-            
-            //ToDoリストの表示
-            displayTodos(todos);
-        })
-        tr.appendChild(buttonDelete);
+        tr.appendChild(createDelBtn());
 
         document.getElementById('tasklist').appendChild(fragment);
     });
+}
+
+function createStatBtn(todo){
+    const tdStatus = document.createElement('td');
+    const buttonStatus = document.createElement('input');
+    buttonStatus.setAttribute('type', 'button');
+    buttonStatus.setAttribute('value', todo.status);
+    buttonStatus.setAttribute('class', 'button');
+    tdStatus.appendChild(buttonStatus);
+
+    return tdStatus;
+}
+
+function createDelBtn() {
+    const buttonDelete = document.createElement('input');
+    buttonDelete.setAttribute('type', 'button');
+    buttonDelete.setAttribute('value', DELETE_BUTTON);
+    buttonDelete.setAttribute('class', 'button');
+    buttonDelete.addEventListener('click', event => {
+        //対象行を削除
+        const idNum = parseInt(event.target.parentNode.firstChild.outerText);
+        todos = todos.filter(todo => todo.id !== idNum);
+
+        //IDの振り直し
+        todos.forEach((todo,index) => {
+            todo.id = index + 1;
+        });
+        
+        //ToDoリストの表示
+        displayTodos(todos);
+    })
+
+    return buttonDelete;
 }
 </script>
 
