@@ -77,7 +77,8 @@ function displayTodos(todoList) {
         tr.appendChild(tdComment);
 
         //状態カラムの設定
-        tr.appendChild(createStatBtn(todo));
+        const tdStatus = createStatBtn(todo);
+        tr.appendChild(tdStatus);
 
         //削除ボタンの設定
         tr.appendChild(createDelBtn());
