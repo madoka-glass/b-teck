@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ToDoリスト</title>
+  </head>
+  <style type="text/css">
+    .button {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .title {
+      display: inline-block;
+      margin-top: 10px;
+      margin-right: 10px;
+      font-weight: bold;
+      font-size: large;
+    }
+  </style>
+
+  <body>
+    <h1>ToDoリスト</h1>
+    <input type="radio" name="status" value="all" checked />すべて
+    <input type="radio" name="status" value="working" />作業中
+    <input type="radio" name="status" value="done" />完了
+    <table id="taskList">
+      <tr>
+        <th>ID</th>
+        <th>コメント</th>
+        <th>状態</th>
+      </tr>
+    </table>
+    <h2>新規タスクの追加</h2>
+    <p>
+      <input type="text" id="taskName" />
+      <input type="button" id="addButton" class="button" value="追加" />
+    </p>
+  </body>
+  <script>
+    const DELETE_BUTTON = '削除';
+    const STATUS_WORKING = '作業中';
+    const STATUS_DONE = '完了';
+    const table = document.getElementById('taskList');
+    let todos = [];
+
+    document.getElementById('addButton').addEventListener('click', () => {
+      //入力値を取得
+      const task = document.getElementById('taskName');
+      const newTodo = {
+        id: todos.length + 1,
+        task: task.value.trim(),
+        status: STATUS_WORKING,
+      };
+
+      //タスクが空の場合はリストに追加せず処理を終了
+      if (newTodo.task === '') {
+        return;
+      }
+
+      //入力欄を空に戻す
+      task.value = '';
+
+      //ToDoリストの作成
+      todos.push(newTodo);
+
+      //ToDoリストの表示
+      displayTodos(todos);
+    });
+
+    function displayTodos(todoList) {
+      //テーブルのリセット
+      while (table.rows.length > 1) table.deleteRow(1);
+
+      todoList.forEach(todo => {
+        //新規todoの行を設定
+        const fragment = document.createDocumentFragment();
+        const tr = document.createElement('tr');
+        fragment.appendChild(tr);
+
+        //IDカラムの設定
+        const tdId = document.createElement('td');
+        tdId.textContent = todo.id;
+        tr.appendChild(tdId);
+
+        //コメントカラムの設定
+        const tdComment = document.createElement('td');
+        tdComment.textContent = todo.task;
+        tr.appendChild(tdComment);
+
+        //状態カラムの設定
+        const tdStatus = createStatBtn(todo);
+        tr.appendChild(tdStatus);
+
+        //削除ボタンの設定
+        const buttonDelete = createDelBtn();
+        tr.appendChild(buttonDelete);
+
+        document.getElementById('taskList').appendChild(fragment);
+      });
+    }
+
+    function createStatBtn(todo) {
+      const tdStatus = document.createElement('td');
+      const buttonStatus = document.createElement('input');
+      buttonStatus.setAttribute('type', 'button');
+      buttonStatus.setAttribute('value', todo.status);
+      buttonStatus.setAttribute('class', 'button');
+      buttonStatus.addEventListener('click', event => {
+            const status = event.target.value;
+            //現在のステータスに応じて画面とtodoオブジェクトの値を切り替え
+            if (status === STATUS_WORKING) {
+                buttonStatus.setAttribute('value', STATUS_DONE);
+                todo.status = STATUS_DONE;
+            } else {
+                buttonStatus.setAttribute('value', STATUS_WORKING);
+                todo.status = STATUS_WORKING;
+            }
+      })
+      tdStatus.appendChild(buttonStatus);
+
+      return tdStatus;
+    }
+
+    function createDelBtn() {
+      const buttonDelete = document.createElement('input');
+      buttonDelete.setAttribute('type', 'button');
+      buttonDelete.setAttribute('value', DELETE_BUTTON);
+      buttonDelete.setAttribute('class', 'button');
+      buttonDelete.addEventListener('click', (event) => {
+        //対象行を削除
+        const idNum = parseInt(event.target.parentNode.firstChild.outerText);
+        todos = todos.filter((todo) => todo.id !== idNum);
+
+        //IDの振り直し
+        todos.forEach((todo, index) => {
+          todo.id = index + 1;
+        });
+
+        //ToDoリストの表示
+        displayTodos(todos);
+      });
+
+      return buttonDelete;
+    }
+  </script>
+</html>
