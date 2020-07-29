@@ -41,7 +41,6 @@
 <script>
   const DELETE_BUTTON = '削除';
   const STATUS_WORKING = '作業中';
-  const STATUS_DONE = '完了';
   const table = document.getElementById('taskList');
   let todos = [];
 
@@ -107,17 +106,6 @@
     buttonStatus.setAttribute('type', 'button');
     buttonStatus.setAttribute('value', todo.status);
     buttonStatus.setAttribute('class', 'button');
-    buttonStatus.addEventListener('click', event => {
-      const status = event.target.value;
-      //現在のステータスに応じて画面とtodoオブジェクトの値を切り替え
-      if (status === STATUS_WORKING) {
-        buttonStatus.setAttribute('value', STATUS_DONE);
-        todo.status = STATUS_DONE;
-      } else {
-        buttonStatus.setAttribute('value', STATUS_WORKING);
-        todo.status = STATUS_WORKING;
-      }
-    })
     tdStatus.appendChild(buttonStatus);
 
     return tdStatus;
