@@ -22,9 +22,9 @@
 
 <body>
   <h1>ToDoリスト</h1>
-  <input type="radio" name="status" value="all" checked />すべて
-  <input type="radio" name="status" value="working" />作業中
-  <input type="radio" name="status" value="done" />完了
+  <input type="radio" name="status" value="すべて" checked />すべて
+  <input type="radio" name="status" value="作業中" />作業中
+  <input type="radio" name="status" value="完了" />完了
   <table id="taskList">
     <tr>
       <th>ID</th>
@@ -40,6 +40,7 @@
 </body>
 <script>
   const DELETE_BUTTON = '削除';
+  const STATUS_ALL = 'すべて';
   const STATUS_WORKING = '作業中';
   const STATUS_DONE = '完了';
   const table = document.getElementById('taskList');
@@ -67,6 +68,9 @@
 
     //ToDoリストの表示
     displayTodos(todos);
+
+    //選択しているラジオボタンに応じた表示の切り替え
+    changeDisplay();
   });
 
   function displayTodos(todoList) {
@@ -143,6 +147,48 @@
     });
 
     return buttonDelete;
+  }
+
+  //ラジオボタン切替時の動作を設定
+  const elements = document.getElementsByName('status');
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].addEventListener('click', changeDisplay);
+  }
+
+  function changeDisplay() {
+    const elements = document.getElementsByName('status');
+    let status;
+    for (let i = 0; i < elements.length; i++) {
+      if (elements[i].checked) {
+        status = elements[i].attributes[2].nodeValue;;
+        break;
+      }
+    }
+
+    if (status === STATUS_ALL) {
+      resetDisplayStatus();
+    } else if (status === STATUS_WORKING) {
+      resetDisplayStatus();
+      setDisplayStatus(STATUS_WORKING);
+    } else {
+      resetDisplayStatus();
+      setDisplayStatus(STATUS_DONE);
+    }
+  }
+
+  function setDisplayStatus(selectedStatus) {
+    for (let i = 1; i < table.rows.length; i++) {
+      const status = todos[i - 1].status;
+      if (status !== selectedStatus) {
+        table.rows[i].style.display = 'none';
+      }
+    }
+  }
+
+  function resetDisplayStatus() {
+    for (let i = 1; i < table.rows.length; i++) {
+      table.rows[i].style.display = '';
+    }
   }
 </script>
 
