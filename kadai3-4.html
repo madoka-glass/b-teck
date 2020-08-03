@@ -10,14 +10,6 @@
     display: inline-block;
     margin-left: 10px;
   }
-
-  .title {
-    display: inline-block;
-    margin-top: 10px;
-    margin-right: 10px;
-    font-weight: bold;
-    font-size: large;
-  }
 </style>
 
 <body>
@@ -75,7 +67,7 @@
     }
   });
 
-  function displayTodos(todoList) {
+  const displayTodos = (todoList) => {
     //テーブルのリセット
     while (table.rows.length > 1) table.deleteRow(1);
 
@@ -104,10 +96,10 @@
       tr.appendChild(buttonDelete);
 
       document.getElementById('taskList').appendChild(fragment);
-    });
-  }
+    })
+  };
 
-  function createStatBtn(todo) {
+  const createStatBtn = (todo) => {
     const tdStatus = document.createElement('td');
     const buttonStatus = document.createElement('input');
     buttonStatus.setAttribute('type', 'button');
@@ -127,9 +119,9 @@
     tdStatus.appendChild(buttonStatus);
 
     return tdStatus;
-  }
+  };
 
-  function createDelBtn() {
+  const createDelBtn = () => {
     const buttonDelete = document.createElement('input');
     buttonDelete.setAttribute('type', 'button');
     buttonDelete.setAttribute('value', DELETE_BUTTON);
@@ -147,9 +139,8 @@
       //ToDoリストの表示
       displayTodos(todos);
     });
-
     return buttonDelete;
-  }
+  };
 
   //ラジオボタン切替時の動作を設定
   const elements = document.getElementsByName('status');
@@ -174,12 +165,12 @@
           setDisplayStatus(STATUS_DONE);
       }
     })
-  };
+  }
 
-  function setDisplayStatus(selectedStatus) {
+  const setDisplayStatus = (selectedStatus) => {
     let selectedTodos = todos.filter((todo) => todo.status === selectedStatus);
     displayTodos(selectedTodos);
-  }
+  };
 </script>
 
 </html>
