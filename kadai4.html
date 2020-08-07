@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>課題4</title>
+</head>
+<style type="text/css">
+  .msg {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 2px solid;
+    border-top-color: lightgray;
+    border-bottom: 2px solid;
+    border-bottom-color: lightgray;
+  }
+
+  .button {
+    display: block;
+    margin-bottom: 10px;
+  }
+</style>
+
+<body>
+  <div id='quizApp'>
+    <h1 id="msg1">ようこそ</h1>
+    <p id="msg2" class="msg">以下のボタンをクリック</p>
+    <input type="button" id="startButton" value="開始" />
+  </div>
+</body>
+<script>
+  const div = document.getElementById('quizApp');
+  const msg1 = document.getElementById('msg1');
+  const msg2 = document.getElementById('msg2');
+  const url = 'https://opentdb.com/api.php?amount=10&type=multiple';
+  const startButton = document.getElementById('startButton');
+
+  startButton.addEventListener('click', () => {
+    //インスタンスの作成
+    const quizApp = new QuizApp();
+
+    //非同期でクイズ問題を取得
+    quizApp.getQuizList(url);
+
+    //待機状態の画面に更新
+    msg1.innerText = '取得中';
+    msg2.innerText = '少々お待ちください。';
+    startButton.style.visibility = 'hidden';
+  });
+
+  class QuizApp {
+    constructor() {
+      this.quizNum = 0;
+      this.correctAnswerNum = 0;
+      this.quizList = [];
+    }
+
+    //フェッチ処理の完了後にクイズを出題する
+    getQuizList = (async url => {
+      this.quizList = await this.fetchQuizList(url);
+
+      this.displayQuiz(this.quizList, this.quizNum);
+    });
+
+    //クイズ問題をフェッチする
+    fetchQuizList = (url => {
+      const quizList = fetch(url).then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('クイズの取得に失敗しました');
+        }
+      }).catch(e => {
+        console.log(e);
+      });
+      return quizList;
+    });
+
+    //クイズを表示
+    displayQuiz = ((quizList, quizNum) => {
+      //2問目以降は画面の出力結果をリセット
+      if (quizNum !== 0) {
+        Util.resetDisp();
+      }
+      //ジャンルなどクイズに関連する情報を表示
+      this.createQuizInfo(quizList, quizNum);
+      //クイズの選択肢を表示
+      this.createChoices(quizList, quizNum);
+    });
+
+    //ジャンルなどクイズに関連する情報を表示
+    createQuizInfo = (quizList, quizNum) => {
+      const quizInfo = `<h3>[ジャンル] ${quizList.results[quizNum].category}</h3>
+                      <h3>[難易度] ${quizList.results[quizNum].difficulty}</h3>`;
+      msg1.innerText = `問題${quizNum + 1}`;
+      msg1.insertAdjacentHTML('afterend', quizInfo);
+      msg2.innerText = quizList.results[quizNum].question;
+    };
+
+    //クイズの選択肢を表示
+    createChoices = (quizList, quizNum) => {
+      const correctAnswer = quizList.results[quizNum].correct_answer;
+      const incorrectAnswer = quizList.results[quizNum].incorrect_answers;
+
+      //正誤の選択肢をリストにまとめてシャッフル
+      const choiceList = incorrectAnswer;
+      choiceList.push(correctAnswer);
+      Util.shuffle(choiceList);
+
+      //選択肢を表示
+      choiceList.forEach(choice => {
+        const elem = document.createElement('input');
+        elem.setAttribute('type', 'button');
+        elem.setAttribute('value', choice);
+        elem.setAttribute('class', 'button');
+        elem.addEventListener('click', event => {
+          const answer = event.target.value;
+
+          //正解を選んだ場合は正解数を加算
+          if (answer === correctAnswer) {
+            this.correctAnswerNum++;
+          }
+          //完了済み問題数を加算
+          quizNum++;
+
+          //既定の問題数をクリアしたら結果画面を表示
+          if (quizNum < quizList.results.length) {
+            //次の問題を表示
+            this.displayQuiz(quizList, quizNum);
+          } else {
+            this.displayResult(this.correctAnswerNum);
+          }
+        })
+        div.insertBefore(elem, startButton);
+      })
+    };
+
+    //クイズの回答結果を表示
+    displayResult = (correctAnswerNum) => {
+      Util.resetDisp();
+      msg1.innerText = `あなたの正答数は${correctAnswerNum}です！！`;
+      msg2.innerText = '再度チャレンジしたい場合は以下をクリック！！';
+
+      const elem = document.createElement('input');
+      elem.setAttribute('type', 'button');
+      elem.setAttribute('id', 'homeButton');
+      elem.setAttribute('value', 'ホームに戻る');
+      elem.addEventListener('click', () => {
+        msg1.innerText = 'ようこそ';
+        msg2.innerText = '以下のボタンをクリック';
+        startButton.style.visibility = 'visible';
+        document.getElementById('homeButton').remove();
+      });
+      startButton.insertAdjacentElement('beforebegin', elem);
+    };
+  }
+
+  class Util {
+    //画面の出力結果をリセット
+    static resetDisp = () => {
+      //ジャンルなどの情報をリセット
+      const quizInfo = document.querySelectorAll('h3');
+      quizInfo.forEach(info => {
+        info.remove();
+      });
+      //クイズの選択肢をリセット
+      const choises = document.querySelectorAll('input.button');
+      choises.forEach(choice => {
+        choice.remove();
+      });
+    };
+
+    //リストの要素をランダムに混ぜる
+    static shuffle = ([...array]) => {
+      for (let i = array.length - 1; i >= 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+  }
+</script>
+
+</html>
