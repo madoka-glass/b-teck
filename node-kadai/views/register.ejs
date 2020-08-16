@@ -8,20 +8,30 @@
 </head>
 <%- include("./partial/header") %>
 <h3>Register</h3>
-<div class='input-data'>
-  <span>Name </span><input type='text' id="name">
-</div>
-<div class='input-data'>
-  <span>E-Mail Address </span><input type='text' id="mailAddress">
-</div>
-<div class='input-data'>
-  <span>Password </span><input type='password' id="password">
-</div>
-<div class='input-data'>
-  <span>Confirm Password </span><input type='password' id="confirmPassword">
-</div>
-<input type='button' id='password' value='Register'>
-
+<form action="/register" method="post">
+  <div class='input-data'>
+    <span>Name </span><input type='text' id="name" name="username" value="<%= username %>">
+  </div>
+  <div class='input-data'>
+    <span>E-Mail Address </span><input type='text' id="mailAddress" name="mailAddress" value="<%= mailAddress %>">
+  </div>
+  <div class='input-data'>
+    <span>Password </span><input type='password' id="password" name="password">
+  </div>
+  <div class='input-data'>
+    <span>Confirm Password </span><input type='password' id=" confirmPassword" name="confirmPassword">
+  </div>
+  <input type='submit' id='registerBtn' value='Register'">
+</form>
 </body>
+<%if(errMsg){%>
+<ul>
+  <% for (let i in errMsg) { %>
+  <li>
+    <%= errMsg[i].msg %>
+  </li>
+  <% } %>
+</ul>
+<%}%>
 
 </html>
