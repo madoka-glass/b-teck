@@ -42,14 +42,8 @@ class ObjectWrapper<T> {
    * 指定した値を持つkeyの配列を返却。該当のものがなければ空の配列を返却。
    */
   findKeys<K extends keyof T, U extends T[K]>(val: U): K[] {
-    let targetKeyArray: K[] = [];
-    const allKeyArray = Object.keys(this._obj) as K[];
-    allKeyArray.forEach(element => {
-      if (this._obj[element] === val) {
-        targetKeyArray.push(element);
-      }
-    });
-    return targetKeyArray;
+    const allKeyArray = R.keys(this._obj) as K[];
+    return R.filter((n: K) => this._obj[n] === val, allKeyArray);
   }
 }
 

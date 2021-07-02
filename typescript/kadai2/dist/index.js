@@ -36,14 +36,8 @@ class ObjectWrapper {
      * 指定した値を持つkeyの配列を返却。該当のものがなければ空の配列を返却。
      */
     findKeys(val) {
-        let targetKeyArray = [];
-        const allKeyArray = Object.keys(this._obj);
-        allKeyArray.forEach(element => {
-            if (this._obj[element] === val) {
-                targetKeyArray.push(element);
-            }
-        });
-        return targetKeyArray;
+        const allKeyArray = R.keys(this._obj);
+        return R.filter((n) => this._obj[n] === val, allKeyArray);
     }
 }
 /**
@@ -67,7 +61,8 @@ wrappedObj1.set('b', '04') === true &&
 else {
     console.error('NG: set(key, val)');
 }
-if (wrappedObj1.get('b') === '04' // && wrappedObj1.get('c') === undefined
+if (wrappedObj1.get('b') === '04'
+// && wrappedObj1.get('c') === undefined
 ) {
     console.log('OK: get(key)');
 }
