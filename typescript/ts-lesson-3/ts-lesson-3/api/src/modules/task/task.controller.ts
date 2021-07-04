@@ -48,7 +48,7 @@ export class TaskController {
     responseData = await this._taskService.createTask(param);
     return new CreatedResponse(responseData);
   }
-
+  
   @Get()
   @ApiExtraModels(OkResponse, TasksResponseDto)
   @ApiSuccessResponse(OkResponse, TasksResponseDto)
@@ -77,6 +77,7 @@ export class TaskController {
     @Body() param: updateTaskRequestDto,
   ): Promise<CommonResponse> {
     let responseData: { task: Task };
+
     responseData = await this._taskService.updateTask(taskId, param);
     return new OkResponse(responseData);
   }
@@ -86,6 +87,7 @@ export class TaskController {
   @ApiSuccessResponse(OkResponse, DeletedResult)
   async delteTask(@Param('taskId') taskId: string): Promise<CommonResponse> {
     let responseData: DeleteResult;
+
     responseData = await this._taskService.deleteTask(taskId);
     return new OkResponse(responseData);
   }
