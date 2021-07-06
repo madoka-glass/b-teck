@@ -28,7 +28,6 @@ import { TaskResponseDto } from './dto/task.response.dto';
 import { TasksResponseDto } from './dto/tasks.response.dto';
 import { updateTaskRequestDto } from './dto/update-task.request.dto';
 import { TaskService } from './task.service';
-import { Task } from 'src/database/entities/task.entity';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -44,7 +43,7 @@ export class TaskController {
   async createTask(
     @Body() param: createTaskRequestDto,
   ): Promise<CreatedResponse> {
-    let responseData: { task: Task };
+    let responseData: TaskResponseDto;
     responseData = await this._taskService.createTask(param);
     return new CreatedResponse(responseData);
   }
@@ -53,7 +52,7 @@ export class TaskController {
   @ApiExtraModels(OkResponse, TasksResponseDto)
   @ApiSuccessResponse(OkResponse, TasksResponseDto)
   async getTasks(): Promise<CommonResponse> {
-    let responseData: { tasks: Task[] };
+    let responseData: TasksResponseDto;
 
     responseData = await this._taskService.getTasks();
 
@@ -64,7 +63,7 @@ export class TaskController {
   @ApiExtraModels(OkResponse, TaskResponseDto)
   @ApiSuccessResponse(OkResponse, TaskResponseDto)
   async findTask(@Param('taskId') taskId: string): Promise<CommonResponse> {
-    let responseData: { task: Task };
+    let responseData: TaskResponseDto;
     responseData = await this._taskService.findTask(taskId);
     return new OkResponse(responseData);
   }
@@ -76,7 +75,7 @@ export class TaskController {
     @Param('taskId') taskId: string,
     @Body() param: updateTaskRequestDto,
   ): Promise<CommonResponse> {
-    let responseData: { task: Task };
+    let responseData: TaskResponseDto;
     responseData = await this._taskService.updateTask(taskId, param);
     return new OkResponse(responseData);
   }

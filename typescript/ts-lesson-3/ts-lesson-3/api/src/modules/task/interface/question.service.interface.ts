@@ -3,15 +3,14 @@ import { createTaskRequestDto } from '../dto/create-task.request.dto';
 import { TaskResponseDto } from '../dto/task.response.dto';
 import { TasksResponseDto } from '../dto/tasks.response.dto';
 import { updateTaskRequestDto } from '../dto/update-task.request.dto';
-import { Task } from 'src/database/entities/task.entity';
 
 export interface ITaskService {
-  createTask(param: createTaskRequestDto): Promise<{ task: Task }>;
-  getTasks(): Promise<{ tasks: Task[] }>;
-  findTask(taskId: string): Promise<{ task: Task }>;
+  createTask(param: createTaskRequestDto): Promise<TaskResponseDto>;
+  getTasks(): Promise<TasksResponseDto>;
+  findTask(taskId: string): Promise<TaskResponseDto>;
   updateTask(
     taskId: string,
     param: updateTaskRequestDto,
-  ): Promise<{ task: Task }>;
+  ): Promise<TaskResponseDto>;
   deleteTask(taskId: string): Promise<DeleteResult>;
 }
