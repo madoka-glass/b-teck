@@ -85,6 +85,7 @@ export class TaskController {
   @ApiSuccessResponse(OkResponse, DeletedResult)
   async delteTask(@Param('taskId') taskId: string): Promise<CommonResponse> {
     let responseData: DeleteResult;
+
     responseData = await this._taskService.deleteTask(taskId);
     return new OkResponse(responseData);
   }
